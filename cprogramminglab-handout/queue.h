@@ -7,7 +7,7 @@
  * Extended to store strings, 2018
  *
  * TODO: fill in your name and Andrew ID
- * @author XXX <XXX@andrew.cmu.edu>
+ * @author yuao7ma
  */
 
 #include <stdbool.h>
@@ -48,6 +48,8 @@ typedef struct {
    * TODO: You will need to add more fields to this structure
    *       to efficiently implement q_size and q_insert_tail
    */
+  list_ele_t *tail;
+  size_t size;
 } queue_t;
 
 /************** Operations on queue ************************/
