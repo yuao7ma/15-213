@@ -25,21 +25,45 @@
  * @param[in] R
  * @return
  */
-bool is_cord(const cord_t *R) { return false; }
+bool is_cord(const cord_t *R) {
+  if (R == NULL)
+    return true;
+  if (!R->left && !R->right) {
+    if (!R->data || strlen(R->data) != R->len)
+      return false;
+    else
+      return true;
+  }
+  if (!R->left || !R->right)
+    return false;
+  return is_cord(R->left) && is_cord(R->right) &&
+         (R->len == R->left->len + R->right->len);
+}
 
 /**
  * @brief Returns the length of a cord
  * @param[in] R
  * @return
  */
-size_t cord_length(const cord_t *R) { return 0; }
+size_t cord_length(const cord_t *R) {
+  if (!R)
+    return 0;
+  return R->len;
+}
 
 /**
  * @brief Allocates a new cord from a string
  * @param[in] s
  * @return
  */
-const cord_t *cord_new(const char *s) { return NULL; }
+const cord_t *cord_new(const char *s) {
+  cord_t *newcord = xcalloc(1, sizeof(cord_t));
+  newcord->left = NULL;
+  newcord->right = NULL;
+  newcord->data = s;
+  newcord->len = strlen(s);
+  return newcord;
+}
 
 /**
  * @brief Concatenates two cords into a new cord
@@ -47,7 +71,13 @@ const cord_t *cord_new(const char *s) { return NULL; }
  * @param[in] S
  * @return
  */
-const cord_t *cord_join(const cord_t *R, const cord_t *S) { return NULL; }
+const cord_t *cord_join(const cord_t *R, const cord_t *S) {
+  cord_t *root = xcalloc(1, sizeof(cord_t));
+  root->left = R;
+  root->right = S;
+  root->len = R->len + S->len;
+  return root;
+}
 
 /**
  * @brief Converts a cord to a string
@@ -70,7 +100,12 @@ char *cord_tostring(const cord_t *R) {
  */
 char cord_charat(const cord_t *R, size_t i) {
   assert(i <= cord_length(R));
-  return '\0';
+  if (R->left == NULL && R->right == NULL)
+    return R->data[i];
+  if (i <= R->left->len)
+    return cord_charat(R->left, i);
+  else
+    return cord_charat(R->right, i - R->left->len);
 }
 
 /**
